@@ -4,18 +4,18 @@ const router  = express.Router();
 const bannerController = require('../controllers/banner.controller.js');
 
 // Create a new Banner
-router.post('/banners', bannerController.create);
+router.post('/mrMed/banners', bannerController.create);
 
 // Retrieve all Banners
-router.get('/banners', bannerController.findAll);
+router.get('/mrMed/banners', bannerController.findAll);
 
 // Retrieve a single Banner with bannerId
-router.get('/banners/:bannerId', bannerController.findOne);
+router.get('/mrMed/banners/:bannerId', bannerController.findOne);
 
 // Update a Banner with bannerId
-router.put('/banners/:bannerId', bannerController.update);
+router.put('/mrMed/banners/:bannerId', bannerController.update);
 
 // Delete a Banner with bannerId
-router.delete('/banners/:bannerId', bannerController.delete);
+router.delete('/mrMed/banners/:bannerId', bannerController.delete);
    
 module.exports = router;

@@ -16,7 +16,7 @@ const banner = new Banner({
     mobileImage:req.body.mobileImage
 });
 
-// Save Note in the database
+// Save Banner in the database
 banner.save()
 .then(data => {
     res.send(data);

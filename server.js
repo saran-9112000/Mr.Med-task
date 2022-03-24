@@ -16,7 +16,10 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(bodyParser.json())
 
 const mongoose = require('mongoose');
-const routes = require('./app/routes/banner.routes.js');
+const routes = require(
+    './app/routes/coupon.routes.js',
+    './app/routes/banner.routes.js'
+    );
 // listen for requests
 app.listen(4000, () => {
     console.log("Server is listening on port 4000");
