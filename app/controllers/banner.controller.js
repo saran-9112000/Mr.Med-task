@@ -30,7 +30,7 @@ banner.save()
 };
 
 // Retrieve and return all Banner from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async(req, res) => {
     Banner.find({}).sort({status:1,_id:-1})
     .then(banner => {
         res.send(banner);
@@ -98,6 +98,7 @@ exports.update = (req, res) => {
             message: "Error updating Banner with id " + req.params.bannerId
         });
     });
+
 };
 
 

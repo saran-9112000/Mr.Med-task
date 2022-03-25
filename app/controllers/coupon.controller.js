@@ -1,12 +1,16 @@
-const Coupon = require('../models/coupon.model.js');
 
+const {AuthSchema}=require('../models/coupon.model.js');
+
+var mongoose = require('mongoose');
+const Coupon = mongoose.model('Coupon');
 // Create and Save a new Coupon
-exports.create = (req, res) => {
+exports.create = async(req, res) => {
 // Validate request
+try{
+const result = await AuthSchema.validateAsync(req.body);
 Coupon.findById(req.params.couponId, (err, data) => {
     //if Coupon not in db, add it
     if (!data) {
-
 // Create a coupon
 const coupon = new Coupon({
     OfferName:req.body.OfferName,
@@ -17,24 +21,27 @@ const coupon = new Coupon({
     DiscountAmount:req.body.DiscountAmount,
     TermsAndCondition:req.body.TermsAndCondition,
     OfferPosterOrImage:req.body.OfferPosterOrImage,
-    Status:req.body.Status
+    Status:req.body.Status,
 });
-
 // Save Coupon in the database
 coupon.save()
 .then(data => {
     res.send(data);
 }).catch(err => {
     res.status(500).send({
-        message: err.message || "Some error occurred while creating the Coupon."
+        message: err.message || "Some error occurred while creating the Coupon."   
     });
+    
 });
-
 }})
+}
+catch (error){
+    res.status(200).json({message:error?.message || error})   
+}
 };
-
 // Retrieve and return all Coupon from the database.
-exports.findAll = (req, res) => {
+exports.findAll = async(req, res) => {
+    
     Coupon.find({}).sort({_id:-1})
     .then(coupon => {
         res.send(coupon);
@@ -43,10 +50,24 @@ exports.findAll = (req, res) => {
             message: err.message || "Some error occurred while retrieving coupon details."
         });
     });
-};
 
+        
+};
+// Retrieve and return all Active Coupon from the database.
+exports.findByStatus = (req, res) => {
+    
+    Coupon.find({Status:true})
+    .then(coupon => {
+        res.send(coupon);
+    }).catch(err => {
+        res.status(500).send({
+            message: err.message || "Some error occurred while retrieving coupon details."
+        });
+    });
+};
 // Find a single Coupon with a couponId
-exports.findOne = (req, res) => {
+exports.findOne = async(req, res) => {
+    
     Coupon.findById(req.params.couponId)
     .then(coupon => {
         if(!coupon) {
@@ -66,17 +87,16 @@ exports.findOne = (req, res) => {
         });
     });
 };
-
-
 // Update a coupon identified by the couponId in the request
-exports.update = (req, res) => {
+exports.update = async(req, res) => {
     // Validate Request
+    try{
+        result = await AuthSchema.validateAsync(req.body);
     if(!req.body.OfferName) {
         return res.status(400).send({
             message: "Offer Name can not be empty"
         });
     }
-
     // Find coupon and update it with the request body
     Coupon.findByIdAndUpdate(req.params.couponId, {
         OfferName:req.body.OfferName,
@@ -106,11 +126,14 @@ exports.update = (req, res) => {
             message: "Error updating Coupon with id " + req.params.couponId
         });
     });
+    }
+    catch(error){
+        res.status(200).json({message:error?.message || error})
+    }   
 };
-
-
 // Delete a Coupon with the specified couponId in the request
-exports.delete = (req, res) => {
+exports.delete = async(req, res) => {
+    
     Coupon.findByIdAndRemove(req.params.couponId)
     .then(coupon => {
         if(!coupon) {

@@ -3,19 +3,23 @@ const router  = express.Router();
 
 const couponController = require('../controllers/coupon.controller.js');
 
+
 // Create a new Coupon
 router.post('/mrMed/coupons', couponController.create);
 
-// Retrieve all Banners
+// Retrieve all Coupons
 router.get('/mrMed/coupons', couponController.findAll);
 
-// Retrieve a single Banner with bannerId
+//Retrive Active Coupon
+router.get('/mrMed/coupons/:Status', couponController.findByStatus);
+
+// Retrieve a single Coupon with CouponId
 router.get('/mrMed/coupons/:couponId', couponController.findOne);
 
-// Update a Banner with bannerId
+// Update a Coupon with couponId
 router.put('/mrMed/coupons/:couponId', couponController.update);
 
-// Delete a Banner with bannerId
+// Delete a Banner with couponId
 router.delete('/mrMed/coupons/:couponId', couponController.delete);
    
 module.exports = router;
