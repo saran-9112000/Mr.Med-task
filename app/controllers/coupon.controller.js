@@ -1,13 +1,14 @@
 
-const {AuthSchema}=require('../models/coupon.model.js');
+const {AuthSchema}=require('../validators/coupon.validator');
+const Coupon = require('../models/coupon.model')
+const sendMail = require('../mailer/coupon.mailer')
 
-var mongoose = require('mongoose');
-const Coupon = mongoose.model('Coupon');
 // Create and Save a new Coupon
 exports.create = async(req, res) => {
 // Validate request
 try{
 const result = await AuthSchema.validateAsync(req.body);
+const mail = await sendMail(req.body);
 Coupon.findById(req.params.couponId, (err, data) => {
     //if Coupon not in db, add it
     if (!data) {
@@ -26,10 +27,16 @@ const coupon = new Coupon({
 // Save Coupon in the database
 coupon.save()
 .then(data => {
-    res.send(data);
+    if(coupon.StartDate<new Date() && coupon.EndDate>new Date())
+    {
+        
+        return res.send(data);
+    }
+
+    else return res.status(500).send({message: "Coupon Expired" });
 }).catch(err => {
     res.status(500).send({
-        message: err.message || "Some error occurred while creating the Coupon."   
+        message:  "Some error occurred while creating the Coupon."   
     });
     
 });
@@ -49,27 +56,30 @@ exports.findAll = async(req, res) => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving coupon details."
         });
-    });
-
-        
+    });        
 };
 // Retrieve and return all Active Coupon from the database.
 exports.findByStatus = (req, res) => {
     
-    Coupon.find({Status:true})
-    .then(coupon => {
-        res.send(coupon);
-    }).catch(err => {
+    Coupon.find({Status:req.params.Status,StartDate:req.params.StartDate}).sort({id:-1}).then(coupon => {
+            res.send(coupon);
+    
+}).catch(err => {
         res.status(500).send({
             message: err.message || "Some error occurred while retrieving coupon details."
         });
     });
+    
 };
+
+
+
+
 // Find a single Coupon with a couponId
 exports.findOne = async(req, res) => {
     
     Coupon.findById(req.params.couponId)
-    .then(coupon => {
+    .then(coupon => {        
         if(!coupon) {
             return res.status(404).send({
                 message: "coupon not found with id " + req.params.couponId

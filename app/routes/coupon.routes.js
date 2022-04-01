@@ -11,7 +11,9 @@ router.post('/mrMed/coupons', couponController.create);
 router.get('/mrMed/coupons', couponController.findAll);
 
 //Retrive Active Coupon
-router.get('/mrMed/coupons/:Status', couponController.findByStatus);
+router.get('/mrMed/coupons/:Status/:StartDate', couponController.findByStatus);
+
+
 
 // Retrieve a single Coupon with CouponId
 router.get('/mrMed/coupons/:couponId', couponController.findOne);
