@@ -18,8 +18,10 @@ app.use(bodyParser.json())
 
 const mongoose = require('mongoose');
 const routes = require(
+    './app/routes/medicine.routes.js',
     './app/routes/coupon.routes.js',
     './app/routes/banner.routes.js'
+    
     );
 // listen for requests
 app.listen(4000, () => {

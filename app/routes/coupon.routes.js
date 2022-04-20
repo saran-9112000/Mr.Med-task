@@ -7,13 +7,19 @@ const couponController = require('../controllers/coupon.controller.js');
 // Create a new Coupon
 router.post('/mrMed/coupons', couponController.create);
 
+//Create coupon for user
+router.post('/mrMed/coupons/createwithuser', couponController.createWithUserId);
+
+//Get user coupon, if active
+router.get('/mrMed/coupons/couponwithuser/:_id', couponController.CouponWithUser);
+
 // Retrieve all Coupons
 router.get('/mrMed/coupons', couponController.findAll);
 
 //Retrive Active Coupon
 router.get('/mrMed/coupons/:Status/:StartDate', couponController.findByStatus);
 
-
+router.get('/mrMed/coupons/users', couponController.createTo);
 
 // Retrieve a single Coupon with CouponId
 router.get('/mrMed/coupons/:couponId', couponController.findOne);

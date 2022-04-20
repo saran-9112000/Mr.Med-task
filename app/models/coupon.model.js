@@ -10,6 +10,7 @@ const CouponSchema = mongoose.Schema({
     TermsAndCondition:String,
     OfferPosterOrImage:String,
     Status:Boolean,
+    userId:String,
 
 }, {
     timestamps: true
